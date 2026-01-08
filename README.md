@@ -95,3 +95,10 @@ python -m uvicorn app:app --reload
 http://127.0.0.1:8000/docs
 
 ---
+
+## Swagger UI
+### Input
+![Home Page](images/post_predict.png)
+
+### Output
+![Response](images/response.png)
