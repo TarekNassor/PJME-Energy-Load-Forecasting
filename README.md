@@ -48,6 +48,12 @@ Time-based features extracted from the datetime index:
 - Feature importance visualization
 - Error analysis by date
 
+### 6. Deployment
+FastAPI + Uvicorn
+
+### 7. Output
+Real-time electricity demand prediction via REST API
+
 ---
 
 ## Results
@@ -71,13 +77,21 @@ Time-based features extracted from the datetime index:
 - Matplotlib & Seaborn
 - Scikit-learn
 - XGBoost
+- FastAPI
 
 ---
 
-## Future Improvements
-- Add lag-based features
-- Incorporate weather data
-- Experiment with other forecasting models (LSTM, Prophet)
-- Perform cross-validation for time series
+## Install dependencies
+python -m pip install -r requirements.txt
+
+---
+
+## Start the FastAPI server
+python -m uvicorn app:app --reload
+
+---
+
+## Open API documentation
+http://127.0.0.1:8000/docs
 
 ---
