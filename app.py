@@ -1,18 +1,29 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import joblib
 import pandas as pd
+import joblib
+import os
 
-# Load trained model
-model = joblib.load("pjme_xgb_model.pkl")
+from src.features.build_features import create_time_features
 
+# --------------------
+# App initialization
+# --------------------
 app = FastAPI(
     title="PJME Electricity Demand Forecasting API",
     description="Forecast hourly electricity demand using XGBoost",
-    version="1.0"
+    version="1.0.0"
 )
 
+# --------------------
+# Load model
+# --------------------
+MODEL_PATH = os.getenv("MODEL_PATH", "models/pjme_xgb_model.pkl")
+model = joblib.load(MODEL_PATH)
+
+# --------------------
 # Input schema
+# --------------------
 class PredictionInput(BaseModel):
     dayofyear: int
     hour: int
@@ -21,14 +32,23 @@ class PredictionInput(BaseModel):
     month: int
     year: int
 
+# --------------------
+# Routes
+# --------------------
 @app.get("/")
 def home():
-    return {"message": "PJME Forecasting API is running"}
+    return {"status": "PJME Forecasting API is running"}
 
 @app.post("/predict")
 def predict(data: PredictionInput):
-    input_df = pd.DataFrame([data.dict()])
-    prediction = model.predict(input_df)
+    # Convert input to DataFrame
+    df = pd.DataFrame([data.dict()])
+
+    # Feature engineering
+    X = create_time_features(df)
+
+    # Prediction
+    prediction = model.predict(X)
 
     return {
         "predicted_PJME_MW": float(prediction[0])
