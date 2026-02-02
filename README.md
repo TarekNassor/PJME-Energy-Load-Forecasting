@@ -1,9 +1,19 @@
 # PJME Energy Load Forecasting
 
 ## Overview
-This project focuses on forecasting hourly electricity demand (in MW) for the PJM East (PJME) region using machine learning. An XGBoost regression model is trained on historical energy consumption data with time-based feature engineering.
+This project demonstrates an end-to-end machine learning workflow for forecasting hourly electricity demand in the PJM East (PJME) region.
 
-The goal is to demonstrate how gradient boosting can be applied to time series forecasting problems using structured datetime features.
+The focus goes beyond model accuracy to include clean data processing, reproducible feature engineering, automated testing, CI pipelines, and serving predictions through a production-ready API.
+
+---
+
+## Business Context
+Accurate electricity demand forecasting helps energy providers:
+- Improve operational planning
+- Reduce over- or under-supply risks
+- Support data-driven decision-making
+
+This project shows how machine learning can be applied in a structured and scalable way to support these goals.
 
 ---
 
@@ -15,12 +25,40 @@ The goal is to demonstrate how gradient boosting can be applied to time series f
 
 ---
 
+## Project Structure
+├── data/
+│ └── raw/
+│ └── PJME_hourly.csv
+├── models/
+│ └── pjme_xgb_model.pkl
+├── notebooks/
+│ └── exploration.ipynb
+├── src/
+│ ├── data/
+│ │ └── load_data.py
+│ ├── features/
+│ │ └── build_features.py
+│ └── models/
+│ ├── train.py
+│ └── evaluate.py
+├── tests/
+│ ├── test_data_loading.py
+│ └── test_features.py
+├── app.py
+├── Dockerfile
+├── requirements.txt
+└── .github/workflows/ci.yml
+
+---
+
 ## Key Steps
 
-### 1. Data Preparation
-- Load and parse datetime index
-- Visualize long-term and short-term consumption trends
-- Split data into training and test sets (pre-2015 vs post-2015)
+### 1. Data Loading
+- Parse datetime index
+- Ensure consistent time-based structure
+- Validate inputs through unit tests
+
+---
 
 ### 2. Feature Engineering
 Time-based features extracted from the datetime index:
@@ -31,53 +69,69 @@ Time-based features extracted from the datetime index:
 - Quarter
 - Year
 
-### 3. Exploratory Data Analysis
-- Hourly and monthly demand distributions
-- Weekly consumption patterns
-- Visual inspection of seasonality and trends
+These features capture daily and seasonal demand patterns.
+
+---
+
+### 3. Exploratory Analysis
+- Long-term consumption trends
+- Weekly and daily demand cycles
+- Visual inspection of seasonality and anomalies
+
+---
 
 ### 4. Model Training
 - Model: **XGBoost Regressor**
 - Objective: Regression
-- Learning Rate: 0.01
-- Max Depth: 3
-- Early stopping to prevent overfitting
+- Learning rate: 0.01
+- Max depth: 3
+- Early stopping to control overfitting
+
+---
 
 ### 5. Evaluation
 - Metric: Root Mean Squared Error (RMSE)
-- Feature importance visualization
-- Error analysis by date
+- Feature importance analysis
+- Error analysis by date to understand weak spots
 
-### 6. Deployment
-FastAPI + Uvicorn
+---
 
-### 7. Output
-Real-time electricity demand prediction via REST API
+### 6. CI / Quality Checks
+The project includes a CI pipeline that:
+- Installs dependencies
+- Runs linting (flake8)
+- Executes unit tests
+- Validates API imports
+- Builds a Docker image
+
+This ensures code quality and reproducibility.
+
+---
+
+### 7. Deployment
+The trained model is served through a **FastAPI** application:
+- REST API for real-time predictions
+- Clear input schema using Pydantic
+- Ready for containerized deployment
 
 ---
 
 ## Results
-- The model captures daily and seasonal demand patterns effectively.
-- Hour and day-of-year are among the most important features.
-- Predictions closely follow actual energy consumption trends.
-
----
-
-## Visualizations
-- Time series plots of training vs testing data
-- Feature importance bar charts
-- Actual vs predicted energy usage
-- Weekly zoom-in comparisons
+- The model captures daily and seasonal electricity demand patterns
+- Hour and day-of-year are among the most influential features
+- Predictions closely follow real consumption trends on unseen data
 
 ---
 
 ## Technologies Used
-- Python
+- Python 3.10
 - Pandas & NumPy
 - Matplotlib & Seaborn
 - Scikit-learn
 - XGBoost
 - FastAPI
+- Docker
+- GitHub Actions (CI)
 
 ---
 
